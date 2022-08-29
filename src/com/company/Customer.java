@@ -47,7 +47,7 @@ public class Customer extends Account{
 
     @Override
     public String createAccountID() {                           ///This is to create a unique ID for the Customer Account
-        return String.format("CUS_%04d", accountIDNumber++);
+        return String.format("CTM_%04d", accountIDNumber++);
     }
 
 

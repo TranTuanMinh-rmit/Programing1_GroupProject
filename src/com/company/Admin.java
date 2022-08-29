@@ -8,6 +8,16 @@ public class Admin extends Account{
         super(userName, passWord, accountID);
     }
 
+    //Control menu
+    public void adminMenu(){
+
+    }
+
+    ///Admin methods
+
+
+
+
     @Override
     public String createAccountID() {
         return String.format("ADMIN_%03d", accountIdNumber++);
