@@ -1,10 +1,14 @@
 package com.company;
 
+import java.util.ArrayList;
+
 public class Customer extends Account{
     private String customerFullName;
     private String customerPhoneNumber;
     private Integer customerAmountSpent;
     private String customerTier;
+
+    ArrayList<Customer> customers = new ArrayList<>();
 
     private static Integer accountIDNumber = 0;
 
@@ -15,6 +19,10 @@ public class Customer extends Account{
         this.customerPhoneNumber = customerPhoneNumber;
         this.customerAmountSpent = customerAmountSpent;
         this.customerTier = customerTier;
+    }
+
+    public Customer() {
+
     }
 
     //Getter
@@ -49,6 +57,7 @@ public class Customer extends Account{
     public String createAccountID() {                           ///This is to create a unique ID for the Customer Account
         return String.format("CTM_%04d", accountIDNumber++);
     }
+
 
 
     ///Remember to write checks for taken username

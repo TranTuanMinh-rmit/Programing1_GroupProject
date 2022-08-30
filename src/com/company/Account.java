@@ -12,6 +12,10 @@ public abstract class Account {
         this.accountID = accountID;
     }
 
+    public Account() {
+
+    }
+
     //Getter
 
     public String getUserName() {
