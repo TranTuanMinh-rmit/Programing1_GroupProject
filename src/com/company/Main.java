@@ -16,6 +16,7 @@ public class Main {
                     + "[MENU] \n"
                     + "1. Login \n"
                     + "2. Register \n"
+                    + "3. Exit \n"
                     + "Please input the desired choice: ");
             int choice = mainInput.nextInt();
             switch (choice) {
@@ -25,6 +26,10 @@ public class Main {
 
                 case 2:
                     controlMain.register();
+                    break;
+
+                case 3:
+                    running = false;
                     break;
             }
         }

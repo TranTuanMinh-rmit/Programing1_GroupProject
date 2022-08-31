@@ -40,7 +40,6 @@ public class ControlMain {
         System.out.print("Password: ");
         passWordEntered = loginScan.nextLine();
         Admin.verifyAdmin(userNameEntered, passWordEntered);
-        Admin.printAdmin();
     }
 
 }

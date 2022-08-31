@@ -16,7 +16,7 @@ public class Admin extends Account {
 
 
     //Admin Control menu
-    public static void adminMenu() throws FileNotFoundException {
+    public static void adminMenu() throws FileNotFoundException {       //Main menu for an Admin
         Scanner adminInput = new Scanner(System.in);
 
         Boolean running = true;
@@ -30,7 +30,7 @@ public class Admin extends Account {
                     + "5. Display all Orders \n"
                     + "6. Update Order status \n"
                     + "7. View Orders by Customer ID \n"
-                    + "8. Exit \n"
+                    + "8. Log Out \n"
                     + "Please input the desired choice: ");
             int choice = adminInput.nextInt();
             switch(choice){
@@ -66,7 +66,7 @@ public class Admin extends Account {
 
                 case 8:
                     System.out.println();
-                    System.out.println("Program closing. See you next time!");
+                    System.out.println("Logging Out. See you next time!");
                     running = false;
                     break;
             }

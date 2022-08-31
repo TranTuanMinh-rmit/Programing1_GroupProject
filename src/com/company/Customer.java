@@ -78,7 +78,7 @@ public class Customer extends Account{
         out0.close();
     }
 
-    public static void readCustomer() throws FileNotFoundException {
+    public static void readCustomer() throws FileNotFoundException {        //This is reading from a file and adding it to the ArrayList
         Scanner customerReader = new Scanner(new File("customer.csv"));
         customerReader.useDelimiter(",|\n");
 
@@ -94,6 +94,7 @@ public class Customer extends Account{
         }
     }
 
+    //This is for adding the newly created Customer to a list
     private static void addCustomerToList(String userName, String passWord, String accountID, String customerFullName, String customerPhoneNumber, Integer customerAmountSpent, String customerTier) {
         Customer customer = new Customer(userName, passWord, accountID, customerFullName, customerPhoneNumber, customerAmountSpent, customerTier);
         customers.add(customer);
@@ -101,7 +102,7 @@ public class Customer extends Account{
 
 
     @Override
-    public String createAccountID() {                           ///This is to create a unique ID for the Customer Account
+    public String createAccountID() {                           ///This is to create a unique ID for the Customer Account. Use this in createCustomer()
         return String.format("CTM_%04d", accountIDNumber++);
     }
 
