@@ -15,12 +15,67 @@ public class Admin extends Account {
     }
 
 
-    //Control menu
-    public static void adminMenu(){
-        System.out.print("W.I.P");
+    //Admin Control menu
+    public static void adminMenu() throws FileNotFoundException {
+        Scanner adminInput = new Scanner(System.in);
+
+        Boolean running = true;
+        while (running){
+            System.out.print("===================================== \n"
+                    + "[MENU] \n"
+                    + "1. Add a new Product \n"
+                    + "2. Update the Product's price \n"
+                    + "3. Display all Products \n"
+                    + "4. Display all Customers \n"
+                    + "5. Display all Orders \n"
+                    + "6. Update Order status \n"
+                    + "7. View Orders by Customer ID \n"
+                    + "8. Exit \n"
+                    + "Please input the desired choice: ");
+            int choice = adminInput.nextInt();
+            switch(choice){
+                case 1:
+                    Product.createProduct();
+                    Product.writeProducts();
+                    break;
+
+                case 2:
+                    Product.updatePrice();
+                    Product.writeProducts();
+                    break;
+
+                case 3:
+                    Product.printProduct();
+                    break;
+
+                case 4:
+                    Customer.printCustomer();
+                    break;
+
+                case 5:
+                    Order.printOrder();
+                    break;
+
+                case 6:
+                    Order.updateOrderStatus();
+                    Order.writeOrders();
+                    break;
+                case 7 :
+                    Order.printOrderByCustomerID();
+                    break;
+
+                case 8:
+                    System.out.println();
+                    System.out.println("Program closing. See you next time!");
+                    running = false;
+                    break;
+            }
+        }
     }
 
-    public static void verifyAdmin(String userName, String passWord){
+
+    ///Admin methods
+    public static void verifyAdmin(String userName, String passWord) throws FileNotFoundException {
         for (Admin admin : admins){
             if (admin.getUserName().equals(userName) && admin.getPassWord().equals(passWord)){
                 adminMenu();
@@ -28,8 +83,7 @@ public class Admin extends Account {
         }
     }
 
-    ///Admin methods
-    public static void readAdmin() throws FileNotFoundException {
+    public static void readAdmin() throws FileNotFoundException {       //Read Admin's data fro file
         Scanner adminReader = new Scanner(new File("admin.csv"));
         adminReader.useDelimiter(",|\n");
 

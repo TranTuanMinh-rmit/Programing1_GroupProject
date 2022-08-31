@@ -1,6 +1,9 @@
 package com.company;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -13,7 +16,7 @@ public class Product {
     protected String productCategory;
 
     //ArrayList
-    ArrayList<Product> products = new ArrayList<>();
+    static ArrayList<Product> products = new ArrayList<>();
 
     //Constructor
     public Product(String productID, String productName, Integer productPrice, String productCategory) {
@@ -51,8 +54,9 @@ public class Product {
         this.productCategory = productCategory;
     }
 
+
     //Methods for creating, deleting, modifying products
-    public void createProduct(){
+    public static void createProduct(){
         Scanner input00 = new Scanner(System.in);
         System.out.println("Please enter product's information: ");
 
@@ -70,12 +74,12 @@ public class Product {
         addProductToList(productID, productName, productPrice, productCategory);
     }
 
-    private void addProductToList(String productID, String productName, Integer productPrice, String productCategory){
+    private static void addProductToList(String productID, String productName, Integer productPrice, String productCategory){
         Product product = new Product(productID, productName, productPrice, productCategory);
         products.add(product);
     }
 
-    public void updatePrice(){
+    public static void updatePrice(){
         Integer newPrice = 0;
         Scanner input01 = new Scanner(System.in);
         System.out.println("Please enter the Product's ID that you wish to update the price of: ");
@@ -88,8 +92,37 @@ public class Product {
                 product.setProductPrice(newPrice);
             }
             else {
-                System.out.print("There is so such products in the database!");
+                System.out.print("There is so such product in the database!");
             }
+        }
+    }
+
+    public static void printProduct(){
+        for (int i = 0; i < products.size(); i++){
+            System.out.println(products.get(i));
+        }
+    }
+
+    public static void writeProducts() throws FileNotFoundException {       //Write Product's data to file
+        File productCsvFile = new File("product.csv");
+        PrintWriter out0 = new PrintWriter(productCsvFile);
+
+        for (Product product : products){
+            out0.printf("%s,%s,%d,%s\n", product.getProductID(), product.getProductName(), product.getProductPrice(), product.getProductCategory());
+        }
+        out0.close();
+    }
+
+    public static void readProduct() throws FileNotFoundException {
+        Scanner productReader = new Scanner(new File("product.csv"));
+        productReader.useDelimiter(",|\n");
+
+        while (productReader.hasNext()){
+            String productID = productReader.next();
+            String productName = productReader.next();
+            Integer productPrice = productReader.nextInt();
+            String productCategory = productReader.next();
+            addProductToList(productID, productName, productPrice, productCategory);
         }
     }
 
@@ -98,11 +131,6 @@ public class Product {
     //toString method
     @Override
     public String toString() {
-        return "Product{" +
-                "productID='" + productID + '\'' +
-                ", productName='" + productName + '\'' +
-                ", productPrice=" + productPrice +
-                ", productCategory='" + productCategory + '\'' +
-                '}';
+        return String.format(productID + ", " + productName + ", " + productPrice + ", " + productCategory);
     }
 }

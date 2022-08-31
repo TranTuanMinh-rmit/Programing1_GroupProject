@@ -1,6 +1,10 @@
 package com.company;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Customer extends Account{
     private String customerFullName;
@@ -8,7 +12,7 @@ public class Customer extends Account{
     private Integer customerAmountSpent;
     private String customerTier;
 
-    ArrayList<Customer> customers = new ArrayList<>();
+    static ArrayList<Customer> customers = new ArrayList<>();
 
     private static Integer accountIDNumber = 0;
 
@@ -21,9 +25,6 @@ public class Customer extends Account{
         this.customerTier = customerTier;
     }
 
-    public Customer() {
-
-    }
 
     //Getter
     public String getCustomerFullName() {
@@ -53,13 +54,58 @@ public class Customer extends Account{
         this.customerTier = customerTier;
     }
 
+
+
+    //Methods for Customer
+    public static void createCustomer(){        ///Remember to write checks for taken username
+
+    }
+
+    public static void printCustomer(){
+        for (int i = 0; i < customers.size(); i++){
+            System.out.println(customers.get(i));
+        }
+    }
+
+
+    public static void writeCustomer() throws FileNotFoundException {       //Write Customer's data to file
+        File customerCsvFile = new File("customer.csv");
+        PrintWriter out0 = new PrintWriter(customerCsvFile);
+
+        for (Customer customer : customers){
+            out0.printf("%s,%s,%s,%s,%s,%d,%s\n", customer.getUserName(), customer.getPassWord(), customer.getAccountID(), customer.getCustomerFullName(), customer.getCustomerPhoneNumber(), customer.getCustomerAmountSpent(), customer.getCustomerTier());
+        }
+        out0.close();
+    }
+
+    public static void readCustomer() throws FileNotFoundException {
+        Scanner customerReader = new Scanner(new File("customer.csv"));
+        customerReader.useDelimiter(",|\n");
+
+        while (customerReader.hasNext()){
+            String userName = customerReader.next();
+            String passWord = customerReader.next();
+            String accountId = customerReader.next();
+            String customerName = customerReader.next();
+            String customerPhone = customerReader.next();
+            Integer customerAmountSpent = customerReader.nextInt();
+            String customerTier = customerReader.next();
+            addCustomerToList(userName, passWord, accountId, customerName, customerPhone, customerAmountSpent, customerTier);
+        }
+    }
+
+    private static void addCustomerToList(String userName, String passWord, String accountID, String customerFullName, String customerPhoneNumber, Integer customerAmountSpent, String customerTier) {
+        Customer customer = new Customer(userName, passWord, accountID, customerFullName, customerPhoneNumber, customerAmountSpent, customerTier);
+        customers.add(customer);
+    }
+
+
     @Override
     public String createAccountID() {                           ///This is to create a unique ID for the Customer Account
         return String.format("CTM_%04d", accountIDNumber++);
     }
 
-
-
-    ///Remember to write checks for taken username
-
+    public String toString(){
+        return String.format(userName + ", " + passWord + ", " + accountID + ", " + customerFullName + ", " + customerPhoneNumber + ", " + customerAmountSpent + ", " + customerTier);
+    }
 }
