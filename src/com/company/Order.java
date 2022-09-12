@@ -82,7 +82,7 @@ public class Order extends Product{         //Order extends Product makes it one
 
         Scanner searchByCustomerId = new Scanner(System.in);
 
-        System.out.print("Please enter the book's Title: ");
+        System.out.print("Please enter the Customer's ID: ");
         String customerIdFound = searchByCustomerId.nextLine();
 
         for (Order order : orders){
