@@ -2,13 +2,14 @@ package com.company;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Admin extends Account {
     private Integer accountIdNumber;
 
-    static ArrayList<Admin> admins = new ArrayList<>();
+    static ArrayList<Account> admins = new ArrayList<>();
 
     public Admin(String userName, String passWord, String accountID) {
         super(userName, passWord, accountID);
@@ -16,7 +17,7 @@ public class Admin extends Account {
 
 
     //Admin Control menu
-    public static void adminMenu() throws FileNotFoundException {       //Main menu for an Admin
+    public static void adminMenu() throws IOException {       //Main menu for an Admin
         Scanner adminInput = new Scanner(System.in);
 
         Boolean running = true;
@@ -36,7 +37,6 @@ public class Admin extends Account {
             switch(choice){
                 case 1:
                     Product.createProduct();
-                    Product.writeProducts();
                     break;
 
                 case 2:
@@ -49,7 +49,7 @@ public class Admin extends Account {
                     break;
 
                 case 4:
-                    Customer.printCustomer();
+                    Customer.printAllCustomer();
                     break;
 
                 case 5:
@@ -67,6 +67,8 @@ public class Admin extends Account {
                 case 8:
                     System.out.println();
                     System.out.println("Logging Out. See you next time!");
+                    Product.writeProducts();
+                    Order.writeOrders();
                     running = false;
                     break;
             }
@@ -75,13 +77,13 @@ public class Admin extends Account {
 
 
     ///Admin methods
-    public static void verifyAdmin(String userName, String passWord) throws FileNotFoundException {
+    /*public static void verifyAdmin(String userName, String passWord) throws FileNotFoundException {
         for (Admin admin : admins){
             if (admin.getUserName().equals(userName) && admin.getPassWord().equals(passWord)){
                 adminMenu();
             }
         }
-    }
+    }*/
 
     public static void readAdmin() throws FileNotFoundException {       //Read Admin's data fro file
         Scanner adminReader = new Scanner(new File("admin.csv"));
@@ -111,8 +113,4 @@ public class Admin extends Account {
     public String toString() {
         return String.format(userName + ", " + passWord + ", " + accountID);
     }
-    public String createAccountID() {
-        return String.format("ADMIN_%03d", accountIdNumber++);
-    }
-
 }

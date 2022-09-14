@@ -1,8 +1,6 @@
 package com.company;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -61,18 +59,23 @@ public class Order extends Product{         //Order extends Product makes it one
     }
 
     public static void updateOrderStatus(){
+        ArrayList<Order> ordersFound = new ArrayList<>();
         Scanner statusInput = new Scanner(System.in);
         System.out.println("Please enter the Order's ID that you wish to update the status of: ");
         String orderIdToUpdate = statusInput.nextLine();
 
         for (Order order : orders){
-            if (order.getOrderID().equalsIgnoreCase(orderIdToUpdate)){
-                System.out.print("Please enter the new status: ");
-                String newStatus = statusInput.nextLine();
-                order.setOrderStatus(newStatus);
+            if (order.productID.contains(orderIdToUpdate)){        //Has to be Case sensitive1
+                ordersFound.add(order);
             }
-            else {
-                System.out.print("There is so such order in the database!");
+        }
+        if (ordersFound.isEmpty()){
+            System.out.println("No such order is found!");
+        }else {
+            System.out.print("Please enter new status: ");
+            String newStatus = statusInput.nextLine();
+            for (Order order : ordersFound){
+                order.setOrderStatus(newStatus);
             }
         }
     }
@@ -101,8 +104,8 @@ public class Order extends Product{         //Order extends Product makes it one
     }
 
 
-    public static void writeOrders() throws FileNotFoundException {         //Write Orders' data to file
-        File orderCsvFile = new File("order.csv");
+    public static void writeOrders() throws IOException {         //Write Orders' data to file
+        FileWriter orderCsvFile = new FileWriter("order.csv", false);
         PrintWriter out0 = new PrintWriter(orderCsvFile);
 
         for (Order order : orders){
