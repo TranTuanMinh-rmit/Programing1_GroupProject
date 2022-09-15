@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static com.company.Product.*;
+
 public class Customer extends Account{
     private String customerFullName;
     private String customerPhoneNumber;
@@ -12,7 +14,7 @@ public class Customer extends Account{
 
     static ArrayList<Account> customers = new ArrayList<>();
     static ArrayList<Customer> customersWrite = new ArrayList<>();
-    static ArrayList<Account> customerInSession = new ArrayList<>();
+    static ArrayList<Customer> customerInSession = new ArrayList<>();
     private static Integer accountIDNumber = 0;
 
     //Super constructor
@@ -88,9 +90,17 @@ public class Customer extends Account{
 
         System.out.print("Full name: ");
         String fullName = input02.nextLine();
+        while(!fullName.matches("^[a-zA-Z\\s]+")){
+            System.out.println("Invalid Input!");
+            fullName = input02.nextLine();
+        }
 
         System.out.print("Phone Number: ");
         String phoneNumber = input02.nextLine();
+        while(!phoneNumber.matches("^(\\d{3}[- .]?){2}\\d{4}$")){
+            System.out.println("Invalid Input!");
+            phoneNumber = input02.nextLine();
+        }
 
         String customerTier = "Bronze";
         Integer amountSpent = 0;
@@ -98,19 +108,9 @@ public class Customer extends Account{
         addCustomerToList(userName, passWord, createAccountID(), fullName, phoneNumber, amountSpent, customerTier);
     }
 
-    /*public static void verifyCustomer(String userName, String passWord) throws FileNotFoundException {
-        for (Customer customer : customers){
-            if (customer.getUserName().equals(userName) && customer.getPassWord().equals(passWord) && customer.userName.contains(userName)){
-                customerInSession.add(customer);
-                customerMenu();
-            }else{
-                System.out.println("The Username/Password is incorrect!");
-            }
-        }
-    }*/
-
     static void customerMenu() throws FileNotFoundException {
         Scanner customerInput = new Scanner(System.in);
+        setDiscountPrice();
 
         Boolean running = true;
         while (running) {
@@ -135,7 +135,7 @@ public class Customer extends Account{
                     break;
 
                 case 2:
-                    Product.printProduct();
+                    printProductPriceDiscount();
                     break;
 
                 case 3:
@@ -151,11 +151,11 @@ public class Customer extends Account{
                     break;
 
                 case 6:
-
+                    Order.createOrder();
                     break;
 
                 case 7:
-
+                    Order.printOrderByOrderID();
                     break;
 
                 case 8:
@@ -173,6 +173,41 @@ public class Customer extends Account{
             System.out.println(customers.get(i));
         }
     }
+
+    public static void updateCustomerAmountSpent(Integer amountToPay){
+        for (Customer customer : customersWrite){
+            for (Customer customer1 : customerInSession){
+                customer.setCustomerAmountSpent(customer1.customerAmountSpent +=amountToPay);
+            }
+        }
+    }
+
+    public static void printProductPriceDiscount(){
+        for (Product product : productsDiscountPrice){
+            System.out.println(product.toString());
+        }
+    }
+
+    public static void setDiscountPrice(){                                  //This is a very dirty way of doing discount for prices
+
+    }
+
+    public static void updateCustomerTier(){
+        for (Customer customer : customersWrite){
+            if (customer.customerAmountSpent > 5000000 && customer.customerAmountSpent <= 10000000){
+                customer.setCustomerTier("Silver");
+                break;
+            } else if (customer.customerAmountSpent > 10000000 && customer.customerAmountSpent <= 25000000) {
+                customer.setCustomerTier("Gold");
+                break;
+            }else if (customer.customerAmountSpent > 25000000){
+                customer.setCustomerTier("Platinum");
+            }else {
+                customer.setCustomerTier("Bronze");
+            }
+        }
+    }
+
 
 
     public static void writeCustomer() throws IOException {       //Write Customer's data to file

@@ -28,10 +28,10 @@ public class ControlMain {
         Customer.writeCustomer();
     }
 
-    public void login() throws IOException {
+    public void login() throws IOException, InterruptedException {
         String userNameEntered;
         String passWordEntered;
-        boolean running = true;
+        boolean verified = false;
         Scanner loginScan = new Scanner(System.in);
 
         System.out.println("Please enter your account credentials:");
@@ -42,15 +42,36 @@ public class ControlMain {
         passWordEntered = loginScan.nextLine();
         for (Account account : Customer.customers){
             if (account.getUserName().equals(userNameEntered) && account.getPassWord().equals(passWordEntered)){
-                Customer.customerInSession.add(account);
+                Customer.customerInSession.add((Customer) account);
+                Product.readProduct();
+                System.out.println("...");
+                Thread.sleep(500);
+                Order.readOrder();
+                System.out.println("...");
+                Thread.sleep(500);
+                verified = true;
                 Customer.customerMenu();
                 break;
             } else if (userNameEntered.equals("admin") && passWordEntered.equals("admin")) {
+                Product.readProduct();
+                System.out.println("...");
+                Thread.sleep(500);
+                Order.readOrder();
+                System.out.println("...");
+                Thread.sleep(500);
                 Admin.adminMenu();
+                verified = true;
                 break;
-            } else{
-                System.out.println("The Username/Password is incorrect!");
             }
+        }
+        while(!verified == true){
+            System.out.println("Your Username/Password is incorrect!");
+            System.out.println("Please enter your account credentials:");
+
+            System.out.print("Username: ");
+            userNameEntered = loginScan.nextLine();
+            System.out.print("Password: ");
+            passWordEntered = loginScan.nextLine();
         }
     }
 }

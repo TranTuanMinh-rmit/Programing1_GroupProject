@@ -58,6 +58,7 @@ public class Admin extends Account {
 
                 case 6:
                     Order.updateOrderStatus();
+                    Customer.updateCustomerTier();
                     Order.writeOrders();
                     break;
                 case 7 :
@@ -67,6 +68,7 @@ public class Admin extends Account {
                 case 8:
                     System.out.println();
                     System.out.println("Logging Out. See you next time!");
+                    Customer.writeCustomer();
                     Product.writeProducts();
                     Order.writeOrders();
                     running = false;
@@ -74,16 +76,6 @@ public class Admin extends Account {
             }
         }
     }
-
-
-    ///Admin methods
-    /*public static void verifyAdmin(String userName, String passWord) throws FileNotFoundException {
-        for (Admin admin : admins){
-            if (admin.getUserName().equals(userName) && admin.getPassWord().equals(passWord)){
-                adminMenu();
-            }
-        }
-    }*/
 
     public static void readAdmin() throws FileNotFoundException {       //Read Admin's data fro file
         Scanner adminReader = new Scanner(new File("admin.csv"));

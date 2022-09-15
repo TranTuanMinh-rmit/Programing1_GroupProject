@@ -11,7 +11,8 @@ public class Product {
     protected String productCategory;
 
     //ArrayList
-    static ArrayList<Product> products = new ArrayList<>();
+    static ArrayList<Product> products = new ArrayList<>();                     //For Admin view
+    static ArrayList<Product> productsDiscountPrice = new ArrayList<>();        //For Customer view
     static ArrayList<Product> productsPriceComparing = new ArrayList<>();       //This is for displaying price asc and desc without affecting the original order
     private static Integer productIdNumber = 0;
     //Constructor
@@ -73,6 +74,7 @@ public class Product {
     private static void addProductToList(String productID, String productName, Integer productPrice, String productCategory){
         Product product = new Product(productID, productName, productPrice, productCategory);
         products.add(product);
+        productsDiscountPrice.add(product);
         productsPriceComparing.add(product);
     }
 
@@ -94,7 +96,6 @@ public class Product {
             for (Product product : productsFound){
                 product.setProductPrice(newPrice);
             }
-            //products.addAll(productsFound);
         }
     }
 

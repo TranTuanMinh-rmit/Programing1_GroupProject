@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static com.company.Customer.customerInSession;
+
 public class Order extends Product{         //Order extends Product makes it one order only has one product to it
     private String orderID;
     private String orderStatus; //Whether it's paid or not
@@ -48,7 +50,7 @@ public class Order extends Product{         //Order extends Product makes it one
         orders.add(order);
     }
 
-    public String createOrderID() {                           ///This is to create a unique ID for the Customer Account
+    public static String createOrderID() {                           ///This is to create a unique ID for the Customer Account
         return String.format("ODR_%04d", orderIdNumber++);
     }//To generate unique Order ID
 
@@ -58,14 +60,46 @@ public class Order extends Product{         //Order extends Product makes it one
         }
     }
 
+    public static void createOrder(){
+        ArrayList<Product> productsFound = new ArrayList<>();
+        Scanner input03 = new Scanner(System.in);
+
+
+        String orderId = Order.createOrderID();
+
+        System.out.println("Please enter the Product's ID you wish to purchase: ");
+        String productIdToPurchase = input03.nextLine();
+        for (Product product : productsDiscountPrice){
+            if (product.productID.contains(productIdToPurchase)){        //Has to be Case sensitive1
+                productsFound.add(product);
+            }
+        }
+        if (productsFound.isEmpty()){
+            System.out.println("No such product is found!");
+        }else{
+            for (Customer customer : customerInSession){
+                String orderCustomerId = customer.accountID;
+                for (Product product : productsFound){
+                    String productID = product.productID;
+                    String productName = product.productName;
+                    Integer productPrice = product.productPrice;
+                    String productCategory = product.productCategory;
+                    String orderStatus = "UNPAID";
+                    addOrderToList(orderCustomerId, productID, productName, productPrice, productCategory, orderId, orderStatus);
+                    Customer.updateCustomerAmountSpent(product.productPrice);
+                }
+            }
+        }
+    }
+
     public static void updateOrderStatus(){
         ArrayList<Order> ordersFound = new ArrayList<>();
         Scanner statusInput = new Scanner(System.in);
         System.out.println("Please enter the Order's ID that you wish to update the status of: ");
-        String orderIdToUpdate = statusInput.nextLine();
+        String orderIdToUpdate = statusInput.next();
 
         for (Order order : orders){
-            if (order.productID.contains(orderIdToUpdate)){        //Has to be Case sensitive1
+            if (order.orderID.contains(orderIdToUpdate)){        //Has to be Case sensitive1
                 ordersFound.add(order);
             }
         }
@@ -74,6 +108,10 @@ public class Order extends Product{         //Order extends Product makes it one
         }else {
             System.out.print("Please enter new status: ");
             String newStatus = statusInput.nextLine();
+            while(!newStatus.equals("PAID") && !newStatus.equals("UNPAID")){
+                System.out.println("Status must either changed to PAID or UNPAID!");
+                newStatus = statusInput.nextLine();
+            }
             for (Order order : ordersFound){
                 order.setOrderStatus(newStatus);
             }
@@ -99,6 +137,29 @@ public class Order extends Product{         //Order extends Product makes it one
             System.out.println(String.format("%-15s%-15s%-10s%-15s%-20s%-20s%-15s", "Customer ID", "Order ID", "Order Status", "Product ID", "Product Name", "Product Price", "Product Category"));
             for (Order order : ordersFound){
                 System.out.println(order.toString());
+            }
+        }
+    }
+
+    public static void printOrderByOrderID(){
+        ArrayList<Order> ordersFound = new ArrayList<>();
+
+        Scanner searchByOrderId = new Scanner(System.in);
+
+        System.out.print("Please enter the Order's ID: ");
+        String orderIdFound = searchByOrderId.nextLine();
+
+        for (Order order : orders){
+            if (order.orderID.contains(orderIdFound)){
+                ordersFound.add(order);
+            }
+        }
+        if (ordersFound.isEmpty()){
+            System.out.println("No order with matching ID is found");
+        }else{
+            System.out.println(String.format("%-15s%-15s%-20s%-15s%-20s%-20s%-15s", "Customer ID", "Order ID", "Order Status", "Product ID", "Product Name", "Product Price", "Product Category"));
+            for (Order order : ordersFound){
+                System.out.println(String.format("%-15s%-15s%-20s%-15s%-20s%-20s%-15s", order.toString()));
             }
         }
     }
