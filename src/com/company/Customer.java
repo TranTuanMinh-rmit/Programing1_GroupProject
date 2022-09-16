@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 import static com.company.Product.*;
@@ -109,9 +110,8 @@ public class Customer extends Account{
         addCustomerToList(userName, passWord, createAccountID(), fullName, phoneNumber, amountSpent, customerTier);
     }
 
-    static void customerMenu() throws IOException {
+    static void customerMenu() throws IOException, InterruptedException {
         Scanner customerInput = new Scanner(System.in);
-
 
         Boolean running = true;
         while (running) {
@@ -129,9 +129,11 @@ public class Customer extends Account{
             String choice = customerInput.nextLine();
             switch (choice) {
                 case "1":
-                    for (Account customer : customerInSession){
+                    for (Customer customer : customerInSession){
                         System.out.println("=====================================");
-                        System.out.println(customer.toString());
+                        System.out.println(String.format("%-20s %-20s %-20s %-20s %-20s %-20s %-20s", "Account ID", "UserName", "Password", "Fullname", "Phone Number", "Amount Spent", "Tier"));
+                        System.out.println(String.format("%-20s %-20s %-20s %-20s %-20s %-20s %-20s", customer.getAccountID(), customer.getUserName(), customer.getPassWord(), customer.getCustomerFullName(), customer.getCustomerPhoneNumber(), customer.getCustomerAmountSpent(), customer.getCustomerTier()));
+
                     }
                     break;
 
@@ -174,8 +176,8 @@ public class Customer extends Account{
     }
 
     public static void printAllCustomer(){
-        for (int i = 0; i < customers.size(); i++){
-            System.out.println(customers.get(i));
+        for (Customer customer : customers){
+            System.out.println(String.format("%-20s %-20s %-20s %-20s %-20s %-20s %-20s", customer.getAccountID(), customer.getUserName(), customer.getPassWord(), customer.getCustomerFullName(), customer.getCustomerPhoneNumber(), customer.getCustomerAmountSpent(), customer.getCustomerTier()));
         }
     }
 
@@ -238,8 +240,9 @@ public class Customer extends Account{
 
 
 
-    public static String createAccountID() {                           ///This is to create a unique ID for the Customer Account. Use this in createCustomer()
-        return String.format("CTM_%04d", accountIDNumber++);
+    public static String createAccountID() {
+        Random random = new Random();///This is to create a unique ID for the Customer Account. Use this in createCustomer()
+        return String.format("CTM_%04d", random.nextInt(10000));
     }
 
     @Override

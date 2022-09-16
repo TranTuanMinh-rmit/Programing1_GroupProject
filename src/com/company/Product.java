@@ -58,10 +58,11 @@ public class Product {
 
     //Methods for creating, deleting, modifying products
     public static void createProduct(){
+        Random random = new Random();
         Scanner input00 = new Scanner(System.in);
         System.out.println("Please enter product's information: ");
 
-        String productID = String.format("PRD_%06d", productIdNumber++);
+        String productID = String.format("PRD_%06d", random.nextInt(1000000));
 
         System.out.print("Product's Name: ");
         String productName = input00.nextLine();
@@ -129,8 +130,9 @@ public class Product {
     }
 
     public static void printProduct(){
-        for (Product product : productsDiscountPrice){
-            System.out.println(product.toString());
+        System.out.println(String.format("%-15s %-25s %-20s %15s", "Product ID", "Product Name", "Price", "Category"));
+        for (Product product : products){
+            System.out.println(String.format("%-15s %-25s %-20d %15s",product.getProductID(), product.getProductName(), product.getProductPrice(), product.getProductCategory()));
         }
     }
 
@@ -149,7 +151,7 @@ public class Product {
         if (productsFound.isEmpty()){
             System.out.println("No products in matching Category is found");
         }else{
-            System.out.println(String.format("%-15s%-20s%-20s%-15s", "Product ID", "Product Name", "Product Price", "Product Category"));
+            System.out.println(String.format("%-15s %-25s %-20s %15s", "Product ID", "Product Name", "Price", "Category"));
             for (Product product : productsFound){
                 System.out.println(product.toString());
             }
@@ -158,16 +160,18 @@ public class Product {
 
     public static void printProductPriceAsc(){
         Collections.sort(productsPriceComparing, Comparator.comparing(Product::getProductPrice));
+        System.out.println(String.format("%-15s %-25s %-20s %15s", "Product ID", "Product Name", "Price", "Category"));
         for (Product product : productsPriceComparing){
-            System.out.println(product.toString());
+            System.out.println(String.format("%-15s %-25s %-20d %15s",product.getProductID(), product.getProductName(), product.getProductPrice(), product.getProductCategory()));
         }
     }
 
     public static void printProductPriceDesc(){
         Comparator<Product> priceComparator = Comparator.comparing(Product::getProductPrice);
         Collections.sort(productsPriceComparing, priceComparator.reversed());
+        System.out.println(String.format("%-15s %-25s %-20s %15s", "Product ID", "Product Name", "Price", "Category"));
         for (Product product : productsPriceComparing){
-            System.out.println(product.toString());
+            System.out.println(String.format("%-15s %-25s %-20d %15s",product.getProductID(), product.getProductName(), product.getProductPrice(), product.getProductCategory()));
         }
     }
 

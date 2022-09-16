@@ -8,7 +8,8 @@ import static com.company.Customer.customers;
 
 public class ControlMain {
 
-    public void preProcessing() throws FileNotFoundException, InterruptedException {    ///This is for the programme to read data from the csv file and write to the ArrayList
+    ///This is for the programme to read data from the csv file and write to the ArrayList
+    public void preProcessing() throws FileNotFoundException, InterruptedException {
         System.out.println("Loading");  ///Cosmetic purposes
         Thread.sleep(500);
         Admin.readAdmin();
@@ -25,11 +26,13 @@ public class ControlMain {
         Thread.sleep(500);
     }
 
-    public void register() throws IOException {     //This is for Customer to register their account
+    //This is for Customer to register their account
+    public void register() throws IOException {
         Customer.createCustomer();
         Customer.writeCustomer();
     }
 
+    //Login
     public void login() throws IOException, InterruptedException {
         String userNameEntered;
         String passWordEntered;

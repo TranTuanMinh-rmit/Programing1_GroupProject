@@ -1,15 +1,12 @@
 package com.company;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
     private static ControlMain controlMain = new ControlMain();
 
     public static void main(String[] args) throws IOException, InterruptedException {
-	// write your code here
         controlMain.preProcessing();
         Scanner mainInput = new Scanner(System.in);
         Boolean running = true;
@@ -18,8 +15,8 @@ public class Main {
                          "Instructor: Mr. Minh Vu \n" +
                          "Group: Group 21 \n" +
                          "s3804812, Tran Tuan Minh \n" +
-                         "sXXXXXXX, Student Name \n" +
-                         "sXXXXXXX, Student Name \n");
+                         "s3926234, Nguyen Cong Chinh \n" +
+                         "s3878144, Nguyen Phuoc Thanh \n");
         while (running) {
             System.out.print("===================================== \n"
                     + "[MENU] \n"
