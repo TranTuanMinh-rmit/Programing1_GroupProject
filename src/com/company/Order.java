@@ -1,12 +1,14 @@
 package com.company;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
+import static com.company.Customer.customerInSession;
+
 public class Order extends Product{         //Order extends Product makes it one order only has one product to it
+
     private String orderID;
     private String orderStatus; //Whether it's paid or not
     private String orderCustomerID;
@@ -50,29 +52,88 @@ public class Order extends Product{         //Order extends Product makes it one
         orders.add(order);
     }
 
-    public String createOrderID() {                           ///This is to create a unique ID for the Customer Account
-        return String.format("ODR_%04d", orderIdNumber++);
-    }//To generate unique Order ID
-
     public static void printOrder(){
         for (int i = 0; i < orders.size(); i++){
             System.out.println(orders.get(i));
         }
     }
 
+    public static void createOrder(){
+        Random random = new Random();
+        ArrayList<Product> productsFound = new ArrayList<>();
+        Scanner input03 = new Scanner(System.in);
+        Integer amountToPay = 0;
+        int discountPercent = 0;
+        Integer discountAmount = 0;
+        Integer priceAfterDiscount = 0;
+
+
+        System.out.println("Please enter the Product's ID you wish to purchase: ");
+        String productIdToPurchase = input03.nextLine();
+        for (Product product : productsDiscountPrice){
+            if (product.productID.contains(productIdToPurchase)){        //Has to be Case sensitive1
+                productsFound.add(product);
+            }
+        }
+        if (productsFound.isEmpty()){
+            System.out.println("No such product is found!");
+        }else{
+            for (Customer customer : customerInSession){
+
+                String orderCustomerId = customer.getAccountID();
+                for (Product product : productsFound){
+                    String orderId = String.format("ODR_%04d", random.nextInt(10000));
+                    String productID = product.getProductID();
+                    String productName = product.getProductName();
+                    Integer productPrice = product.getProductPrice();
+                    //Check for discount
+                    if (customer.getCustomerTier().equals("Bronze")){
+                        discountPercent = 0;
+                    }else if (customer.getCustomerTier().equals("Silver")){
+                        discountPercent = 5;
+                    }else if (customer.getCustomerTier().equals("Gold")){
+                        discountPercent = 10;
+                    }else if (customer.getCustomerTier().equals("Platinum")) {
+                        discountPercent = 15;
+                    }
+                    amountToPay = productPrice;
+                    discountAmount = (productPrice/100) * discountPercent;
+                    priceAfterDiscount = amountToPay - discountAmount ;
+
+                    String productCategory = product.getProductCategory();
+                    String orderStatus = "UNPAID";
+                    addOrderToList(orderCustomerId, productID, productName, priceAfterDiscount, productCategory, orderId, orderStatus);
+                    System.out.println("Price before Discount: " + amountToPay);
+                }
+                System.out.println("Price after discount: " + priceAfterDiscount);
+                Customer.updateCustomerAmountSpent(priceAfterDiscount);
+            }
+
+        }
+    }
+
     public static void updateOrderStatus(){
+        ArrayList<Order> ordersFound = new ArrayList<>();
         Scanner statusInput = new Scanner(System.in);
         System.out.println("Please enter the Order's ID that you wish to update the status of: ");
-        String orderIdToUpdate = statusInput.nextLine();
+        String orderIdToUpdate = statusInput.next();
 
         for (Order order : orders){
-            if (order.getOrderID().equalsIgnoreCase(orderIdToUpdate)){
-                System.out.print("Please enter the new status: ");
-                String newStatus = statusInput.nextLine();
-                order.setOrderStatus(newStatus);
+            if (order.orderID.contains(orderIdToUpdate)){        //Has to be Case sensitive1
+                ordersFound.add(order);
             }
-            else {
-                System.out.print("There is so such order in the database!");
+        }
+        if (ordersFound.isEmpty()){
+            System.out.println("No such order is found!");
+        }else {
+            System.out.print("Please enter new status: ");
+            String newStatus = statusInput.nextLine();
+            while(!newStatus.equals("PAID") && !newStatus.equals("UNPAID")){
+                System.out.println("Status must either changed to PAID or UNPAID!");
+                newStatus = statusInput.nextLine();
+            }
+            for (Order order : ordersFound){
+                order.setOrderStatus(newStatus);
             }
         }
     }
@@ -82,7 +143,7 @@ public class Order extends Product{         //Order extends Product makes it one
 
         Scanner searchByCustomerId = new Scanner(System.in);
 
-        System.out.print("Please enter the book's Title: ");
+        System.out.print("Please enter the Customer's ID: ");
         String customerIdFound = searchByCustomerId.nextLine();
 
         for (Order order : orders){
@@ -100,9 +161,32 @@ public class Order extends Product{         //Order extends Product makes it one
         }
     }
 
+    public static void printOrderByOrderID(){
+        ArrayList<Order> ordersFound = new ArrayList<>();
 
-    public static void writeOrders() throws FileNotFoundException {         //Write Orders' data to file
-        File orderCsvFile = new File("order.csv");
+        Scanner searchByOrderId = new Scanner(System.in);
+
+        System.out.print("Please enter the Order's ID: ");
+        String orderIdFound = searchByOrderId.nextLine();
+
+        for (Order order : orders){
+            if (order.orderID.contains(orderIdFound)){
+                ordersFound.add(order);
+            }
+        }
+        if (ordersFound.isEmpty()){
+            System.out.println("No order with matching ID is found");
+        }else{
+            System.out.println(String.format("%-15s%-15s%-20s%-15s%-20s%-20s%-15s", "Customer ID", "Order ID", "Order Status", "Product ID", "Product Name", "Product Price", "Product Category"));
+            for (Order order : ordersFound){
+                System.out.println( order.toString());
+            }
+        }
+    }
+
+
+    public static void writeOrders() throws IOException {         //Write Orders' data to file
+        FileWriter orderCsvFile = new FileWriter("order.csv", false);
         PrintWriter out0 = new PrintWriter(orderCsvFile);
 
         for (Order order : orders){

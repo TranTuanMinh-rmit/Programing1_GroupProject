@@ -18,7 +18,7 @@ public class Main {
                          "Instructor: Mr. Minh Vu \n" +
                          "Group: Group 21 \n" +
                          "s3804812, Tran Tuan Minh \n" +
-                         "s3926234, Nguyen Cong Chinh \n" +
+                         "sXXXXXXX, Student Name \n" +
                          "sXXXXXXX, Student Name \n");
         while (running) {
             System.out.print("===================================== \n"

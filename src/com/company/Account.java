@@ -38,6 +38,4 @@ public abstract class Account {
     public void setAccountID(String accountID) {
         this.accountID = accountID;
     }
-
-    public abstract String createAccountID();
 }

@@ -2,13 +2,14 @@ package com.company;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Admin extends Account {
     private Integer accountIdNumber;
 
-    static ArrayList<Admin> admins = new ArrayList<>();
+    static ArrayList<Account> admins = new ArrayList<>();
 
     public Admin(String userName, String passWord, String accountID) {
         super(userName, passWord, accountID);
@@ -16,7 +17,7 @@ public class Admin extends Account {
 
 
     //Admin Control menu
-    public static void adminMenu() throws FileNotFoundException {       //Main menu for an Admin
+    public static void adminMenu() throws IOException {       //Main menu for an Admin
         Scanner adminInput = new Scanner(System.in);
 
         Boolean running = true;
@@ -24,61 +25,63 @@ public class Admin extends Account {
             System.out.print("===================================== \n"
                     + "[MENU] \n"
                     + "1. Add a new Product \n"
-                    + "2. Update the Product's price \n"
-                    + "3. Display all Products \n"
-                    + "4. Display all Customers \n"
-                    + "5. Display all Orders \n"
-                    + "6. Update Order status \n"
-                    + "7. View Orders by Customer ID \n"
-                    + "8. Log Out \n"
+                    + "2. Remove a Product \n"
+                    + "3. Update the Product's price \n"
+                    + "4. Display all Products \n"
+                    + "5. Display all Customers \n"
+                    + "6. Display all Orders \n"
+                    + "7. Update Order status \n"
+                    + "8. View Orders by Customer ID \n"
+                    + "9. Log Out \n"
                     + "Please input the desired choice: ");
-            int choice = adminInput.nextInt();
+            String choice = adminInput.nextLine();
             switch(choice){
-                case 1:
+                case "1":
                     Product.createProduct();
-                    Product.writeProducts();
                     break;
 
-                case 2:
+                case "2":
+                    Product.deleteProduct();
+                    break;
+
+                case "3":
                     Product.updatePrice();
                     Product.writeProducts();
                     break;
 
-                case 3:
+                case "4":
                     Product.printProduct();
                     break;
 
-                case 4:
-                    Customer.printCustomer();
+                case "5":
+                    Customer.printAllCustomer();
                     break;
 
-                case 5:
+                case "6":
                     Order.printOrder();
                     break;
 
-                case 6:
+                case "7":
                     Order.updateOrderStatus();
+                    Customer.updateCustomerTier();
                     Order.writeOrders();
                     break;
-                case 7 :
+
+                case "8":
                     Order.printOrderByCustomerID();
                     break;
 
-                case 8:
+                case "9":
                     System.out.println();
                     System.out.println("Logging Out. See you next time!");
+                    Customer.writeCustomer();
+                    Product.writeProducts();
+                    Order.writeOrders();
                     running = false;
                     break;
-            }
-        }
-    }
 
-
-    ///Admin methods
-    public static void verifyAdmin(String userName, String passWord) throws FileNotFoundException {
-        for (Admin admin : admins){
-            if (admin.getUserName().equals(userName) && admin.getPassWord().equals(passWord)){
-                adminMenu();
+                default:
+                    System.out.println("Invalid Input!");
             }
         }
     }
@@ -111,8 +114,4 @@ public class Admin extends Account {
     public String toString() {
         return String.format(userName + ", " + passWord + ", " + accountID);
     }
-    public String createAccountID() {
-        return String.format("ADMIN_%03d", accountIdNumber++);
-    }
-
 }

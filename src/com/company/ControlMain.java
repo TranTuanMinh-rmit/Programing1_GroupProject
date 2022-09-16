@@ -1,10 +1,13 @@
 package com.company;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
+
+import static com.company.Customer.customers;
 
 public class ControlMain {
     public void preProcessing() throws FileNotFoundException, InterruptedException {    ///This is for the programme to read data from the csv file and write to the ArrayList
-        System.out.println("Loading");
+        System.out.println("Loading");  ///Cosmetic purposes
         Thread.sleep(500);
         Admin.readAdmin();
         System.out.println("...");
@@ -20,15 +23,15 @@ public class ControlMain {
         Thread.sleep(500);
     }
 
-    public void register() throws FileNotFoundException {     //This is for Customer to register their account
+    public void register() throws IOException {     //This is for Customer to register their account
         Customer.createCustomer();
         Customer.writeCustomer();
     }
 
-    //This class is for something IDK it's a Work in Progress
-    public void login() throws FileNotFoundException {
+    public void login() throws IOException, InterruptedException {
         String userNameEntered;
         String passWordEntered;
+        boolean verified = false;
         Scanner loginScan = new Scanner(System.in);
 
         System.out.println("Please enter your account credentials:");
@@ -37,7 +40,38 @@ public class ControlMain {
         userNameEntered = loginScan.nextLine();
         System.out.print("Password: ");
         passWordEntered = loginScan.nextLine();
-        Admin.verifyAdmin(userNameEntered, passWordEntered);
-    }
+        for (Customer customer : customers){
+            if (customer.getUserName().equals(userNameEntered) && customer.getPassWord().equals(passWordEntered)){
+                Customer.customerInSession.add(customer);
+                verified = true;
+                Customer.customerMenu();
+                break;
+            } else if (userNameEntered.equals("admin") && passWordEntered.equals("admin")) {
+                Admin.adminMenu();
+                verified = true;
+                break;
+            }
+        }
+        while(!verified == true){
+            System.out.println("Your Username/Password is incorrect!");
+            System.out.println("Please enter your account credentials:");
 
+            System.out.print("Username: ");
+            userNameEntered = loginScan.nextLine();
+            System.out.print("Password: ");
+            passWordEntered = loginScan.nextLine();
+            for (Customer customer : customers){
+                if (customer.getUserName().equals(userNameEntered) && customer.getPassWord().equals(passWordEntered)){
+                    Customer.customerInSession.add(customer);
+                    verified = true;
+                    Customer.customerMenu();
+                    break;
+                } else if (userNameEntered.equals("admin") && passWordEntered.equals("admin")) {
+                    Admin.adminMenu();
+                    verified = true;
+                    break;
+                }
+            }
+        }
+    }
 }
