@@ -1,10 +1,8 @@
 package com.company;
-
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class ControlMain {
-
     public void preProcessing() throws FileNotFoundException, InterruptedException {    ///This is for the programme to read data from the csv file and write to the ArrayList
         System.out.println("Loading");
         Thread.sleep(500);
