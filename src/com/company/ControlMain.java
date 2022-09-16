@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+import static com.company.Customer.customers;
+
 public class ControlMain {
 
     public void preProcessing() throws FileNotFoundException, InterruptedException {    ///This is for the programme to read data from the csv file and write to the ArrayList
@@ -40,25 +42,13 @@ public class ControlMain {
         userNameEntered = loginScan.nextLine();
         System.out.print("Password: ");
         passWordEntered = loginScan.nextLine();
-        for (Account account : Customer.customers){
-            if (account.getUserName().equals(userNameEntered) && account.getPassWord().equals(passWordEntered)){
-                Customer.customerInSession.add((Customer) account);
-                Product.readProduct();
-                System.out.println("...");
-                Thread.sleep(500);
-                Order.readOrder();
-                System.out.println("...");
-                Thread.sleep(500);
+        for (Customer customer : customers){
+            if (customer.getUserName().equals(userNameEntered) && customer.getPassWord().equals(passWordEntered)){
+                Customer.customerInSession.add(customer);
                 verified = true;
                 Customer.customerMenu();
                 break;
             } else if (userNameEntered.equals("admin") && passWordEntered.equals("admin")) {
-                Product.readProduct();
-                System.out.println("...");
-                Thread.sleep(500);
-                Order.readOrder();
-                System.out.println("...");
-                Thread.sleep(500);
                 Admin.adminMenu();
                 verified = true;
                 break;
@@ -72,6 +62,18 @@ public class ControlMain {
             userNameEntered = loginScan.nextLine();
             System.out.print("Password: ");
             passWordEntered = loginScan.nextLine();
+            for (Customer customer : customers){
+                if (customer.getUserName().equals(userNameEntered) && customer.getPassWord().equals(passWordEntered)){
+                    Customer.customerInSession.add(customer);
+                    verified = true;
+                    Customer.customerMenu();
+                    break;
+                } else if (userNameEntered.equals("admin") && passWordEntered.equals("admin")) {
+                    Admin.adminMenu();
+                    verified = true;
+                    break;
+                }
+            }
         }
     }
 }

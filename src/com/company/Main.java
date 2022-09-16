@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
@@ -26,21 +27,23 @@ public class Main {
                     + "2. Register \n"
                     + "3. Exit \n"
                     + "Please input the desired choice: ");
-            int choice = mainInput.nextInt();
+            String choice = mainInput.nextLine();
             switch (choice) {
-                case 1:
+                case "1":
                     controlMain.login();
                     break;
 
-                case 2:
+                case "2":
                     controlMain.register();
                     break;
 
-                case 3:
+                case "3":
                     running = false;
                     break;
+
+                default:
+                    System.out.println("Invalid Input!");
             }
         }
-
     }
 }

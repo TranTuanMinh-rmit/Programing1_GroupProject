@@ -2,11 +2,13 @@ package com.company;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
 
 import static com.company.Customer.customerInSession;
 
 public class Order extends Product{         //Order extends Product makes it one order only has one product to it
+
     private String orderID;
     private String orderStatus; //Whether it's paid or not
     private String orderCustomerID;
@@ -50,10 +52,6 @@ public class Order extends Product{         //Order extends Product makes it one
         orders.add(order);
     }
 
-    public static String createOrderID() {                           ///This is to create a unique ID for the Customer Account
-        return String.format("ODR_%04d", orderIdNumber++);
-    }//To generate unique Order ID
-
     public static void printOrder(){
         for (int i = 0; i < orders.size(); i++){
             System.out.println(orders.get(i));
@@ -61,11 +59,14 @@ public class Order extends Product{         //Order extends Product makes it one
     }
 
     public static void createOrder(){
+        Random random = new Random();
         ArrayList<Product> productsFound = new ArrayList<>();
         Scanner input03 = new Scanner(System.in);
+        Integer amountToPay = 0;
+        int discountPercent = 0;
+        Integer discountAmount = 0;
+        Integer priceAfterDiscount = 0;
 
-
-        String orderId = Order.createOrderID();
 
         System.out.println("Please enter the Product's ID you wish to purchase: ");
         String productIdToPurchase = input03.nextLine();
@@ -78,17 +79,36 @@ public class Order extends Product{         //Order extends Product makes it one
             System.out.println("No such product is found!");
         }else{
             for (Customer customer : customerInSession){
-                String orderCustomerId = customer.accountID;
+
+                String orderCustomerId = customer.getAccountID();
                 for (Product product : productsFound){
-                    String productID = product.productID;
-                    String productName = product.productName;
-                    Integer productPrice = product.productPrice;
-                    String productCategory = product.productCategory;
+                    String orderId = String.format("ODR_%04d", random.nextInt(10000));
+                    String productID = product.getProductID();
+                    String productName = product.getProductName();
+                    Integer productPrice = product.getProductPrice();
+                    //Check for discount
+                    if (customer.getCustomerTier().equals("Bronze")){
+                        discountPercent = 0;
+                    }else if (customer.getCustomerTier().equals("Silver")){
+                        discountPercent = 5;
+                    }else if (customer.getCustomerTier().equals("Gold")){
+                        discountPercent = 10;
+                    }else if (customer.getCustomerTier().equals("Platinum")) {
+                        discountPercent = 15;
+                    }
+                    amountToPay = productPrice;
+                    discountAmount = (productPrice/100) * discountPercent;
+                    priceAfterDiscount = amountToPay - discountAmount ;
+
+                    String productCategory = product.getProductCategory();
                     String orderStatus = "UNPAID";
-                    addOrderToList(orderCustomerId, productID, productName, productPrice, productCategory, orderId, orderStatus);
-                    Customer.updateCustomerAmountSpent(product.productPrice);
+                    addOrderToList(orderCustomerId, productID, productName, priceAfterDiscount, productCategory, orderId, orderStatus);
+                    System.out.println("Price before Discount: " + amountToPay);
                 }
+                System.out.println("Price after discount: " + priceAfterDiscount);
+                Customer.updateCustomerAmountSpent(priceAfterDiscount);
             }
+
         }
     }
 
@@ -159,7 +179,7 @@ public class Order extends Product{         //Order extends Product makes it one
         }else{
             System.out.println(String.format("%-15s%-15s%-20s%-15s%-20s%-20s%-15s", "Customer ID", "Order ID", "Order Status", "Product ID", "Product Name", "Product Price", "Product Category"));
             for (Order order : ordersFound){
-                System.out.println(String.format("%-15s%-15s%-20s%-15s%-20s%-20s%-15s", order.toString()));
+                System.out.println( order.toString());
             }
         }
     }

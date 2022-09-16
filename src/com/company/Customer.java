@@ -12,7 +12,8 @@ public class Customer extends Account{
     private Integer customerAmountSpent;
     private String customerTier;
 
-    static ArrayList<Account> customers = new ArrayList<>();
+
+    static ArrayList<Customer> customers = new ArrayList<>();
     static ArrayList<Customer> customersWrite = new ArrayList<>();
     static ArrayList<Customer> customerInSession = new ArrayList<>();
     private static Integer accountIDNumber = 0;
@@ -108,9 +109,9 @@ public class Customer extends Account{
         addCustomerToList(userName, passWord, createAccountID(), fullName, phoneNumber, amountSpent, customerTier);
     }
 
-    static void customerMenu() throws FileNotFoundException {
+    static void customerMenu() throws IOException {
         Scanner customerInput = new Scanner(System.in);
-        setDiscountPrice();
+
 
         Boolean running = true;
         while (running) {
@@ -125,45 +126,49 @@ public class Customer extends Account{
                     + "7. Display my Order status \n"
                     + "8. Logout \n"
                     + "Please input the desired choice: ");
-            int choice = customerInput.nextInt();
+            String choice = customerInput.nextLine();
             switch (choice) {
-                case 1:
+                case "1":
                     for (Account customer : customerInSession){
                         System.out.println("=====================================");
                         System.out.println(customer.toString());
                     }
                     break;
 
-                case 2:
-                    printProductPriceDiscount();
+                case "2":
+                    Product.printProduct();
                     break;
 
-                case 3:
+                case "3":
                     Product.printProductPriceAsc();
                     break;
 
-                case 4:
+                case "4":
                     Product.printProductPriceDesc();
                     break;
 
-                case 5:
+                case "5":
                     Product.printProductByCategory();
                     break;
 
-                case 6:
+                case "6":
                     Order.createOrder();
+                    Order.writeOrders();
                     break;
 
-                case 7:
+                case "7":
                     Order.printOrderByOrderID();
                     break;
 
-                case 8:
+                case "8":
                     System.out.println();
                     customerInSession.clear();
                     System.out.println("Logging Out. See you next time!");
                     running = false;
                     break;
+
+                default:
+                    System.out.println("Invalid Input!");
             }
         }
     }
@@ -175,21 +180,9 @@ public class Customer extends Account{
     }
 
     public static void updateCustomerAmountSpent(Integer amountToPay){
-        for (Customer customer : customersWrite){
-            for (Customer customer1 : customerInSession){
-                customer.setCustomerAmountSpent(customer1.customerAmountSpent +=amountToPay);
-            }
+        for (Customer customer : customerInSession){
+            customer.setCustomerAmountSpent(customer.customerAmountSpent +=amountToPay);
         }
-    }
-
-    public static void printProductPriceDiscount(){
-        for (Product product : productsDiscountPrice){
-            System.out.println(product.toString());
-        }
-    }
-
-    public static void setDiscountPrice(){                                  //This is a very dirty way of doing discount for prices
-
     }
 
     public static void updateCustomerTier(){

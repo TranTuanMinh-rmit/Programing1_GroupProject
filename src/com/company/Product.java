@@ -3,12 +3,16 @@ package com.company;
 import java.io.*;
 import java.util.*;
 
+import static com.company.Customer.customerInSession;
+
 public class Product {
 
     protected String productID;
     protected String productName;
     protected Integer productPrice;
     protected String productCategory;
+    private static Integer discountPercentage;
+    private static Integer discountedPrice;
 
     //ArrayList
     static ArrayList<Product> products = new ArrayList<>();                     //For Admin view
@@ -99,8 +103,33 @@ public class Product {
         }
     }
 
-    public static void printProduct(){
+    public static void deleteProduct(){
+        ArrayList<Product> productsFound = new ArrayList<>();
+        Iterator itr = products.iterator();
+        Scanner input01 = new Scanner(System.in);
+        System.out.println("Please enter the Product's ID that you wish to remove: ");
+        String productIdToRemove = input01.nextLine();
         for (Product product : products){
+            if (product.productID.contains(productIdToRemove)){        //Has to be Case sensitive1
+                productsFound.add(product);
+            }
+        }
+        if (productsFound.isEmpty()){
+            System.out.println("No such product is found!");
+        }else {
+            while (itr.hasNext()){
+                String removeId = (String)itr.next();
+                if(removeId.equals(productIdToRemove)){
+                    itr.remove();
+                }
+            }
+            System.out.print("Product removed!");
+
+        }
+    }
+
+    public static void printProduct(){
+        for (Product product : productsDiscountPrice){
             System.out.println(product.toString());
         }
     }
