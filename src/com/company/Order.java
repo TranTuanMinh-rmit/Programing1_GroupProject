@@ -47,18 +47,20 @@ public class Order extends Product{         //Order extends Product makes it one
     }
 
     //Methods for Order
+
+    //Adding object to Arraylist
     private static void addOrderToList(String orderCustomerID, String productID, String productName, Integer productPrice, String productCategory, String orderID, String orderStatus){
         Order order = new Order(orderCustomerID, orderID, productID, productName, productPrice, productCategory, orderStatus);
         orders.add(order);
     }
 
     public static void printOrder(){
-        for (int i = 0; i < orders.size(); i++){
-            System.out.println(orders.get(i));
+        for (Order order : orders){
+            System.out.println(String.format("%-15s %-15s %-15s %-15s %-25s %-20d %15s",order.getOrderID(), order.getOrderCustomerID(), order.getOrderStatus(), order.getProductID(), order.getProductName(), order.getProductPrice(), order.getProductCategory()));
         }
     }
 
-    public static void createOrder(){
+    public static void createOrder() throws InterruptedException {
         Random random = new Random();
         ArrayList<Product> productsFound = new ArrayList<>();
         Scanner input03 = new Scanner(System.in);
@@ -70,7 +72,7 @@ public class Order extends Product{         //Order extends Product makes it one
 
         System.out.println("Please enter the Product's ID you wish to purchase: ");
         String productIdToPurchase = input03.nextLine();
-        for (Product product : productsDiscountPrice){
+        for (Product product : products){
             if (product.productID.contains(productIdToPurchase)){        //Has to be Case sensitive1
                 productsFound.add(product);
             }
@@ -79,7 +81,6 @@ public class Order extends Product{         //Order extends Product makes it one
             System.out.println("No such product is found!");
         }else{
             for (Customer customer : customerInSession){
-
                 String orderCustomerId = customer.getAccountID();
                 for (Product product : productsFound){
                     String orderId = String.format("ODR_%04d", random.nextInt(10000));
@@ -103,9 +104,14 @@ public class Order extends Product{         //Order extends Product makes it one
                     String productCategory = product.getProductCategory();
                     String orderStatus = "UNPAID";
                     addOrderToList(orderCustomerId, productID, productName, priceAfterDiscount, productCategory, orderId, orderStatus);
-                    System.out.println("Price before Discount: " + amountToPay);
+                    System.out.println("Price before Discount:");
+                    System.out.println(String.format("%-15s %-15s %-15s %-15s %-25s %-20s %15s","Order ID", "Account ID", "Order Status", "Product ID", "Product Name", "Price", "Category"));
+                    System.out.println(String.format("%-15s %-15s %-15s %-15s %-25s %-20d %15s",orderId, customer.getAccountID(), orderStatus, product.getProductID(), product.getProductName(), product.getProductPrice(), product.getProductCategory()));
+                    Thread.sleep(500);
+                    System.out.println("Price after discount:");
+                    System.out.println(String.format("%-15s %-15s %-15s %-15s %-25s %-20s %15s","Order ID", "Account ID", "Order Status", "Product ID", "Product Name", "Price", "Category"));
+                    System.out.println(String.format("%-15s %-15s %-15s %-15s %-25s %-20d %15s",orderId, customer.getAccountID(), orderStatus, product.getProductID(), product.getProductName(), priceAfterDiscount, product.getProductCategory()));
                 }
-                System.out.println("Price after discount: " + priceAfterDiscount);
                 Customer.updateCustomerAmountSpent(priceAfterDiscount);
             }
 
@@ -179,7 +185,7 @@ public class Order extends Product{         //Order extends Product makes it one
         }else{
             System.out.println(String.format("%-15s%-15s%-20s%-15s%-20s%-20s%-15s", "Customer ID", "Order ID", "Order Status", "Product ID", "Product Name", "Product Price", "Product Category"));
             for (Order order : ordersFound){
-                System.out.println( order.toString());
+                System.out.println(order.toString());
             }
         }
     }
@@ -210,10 +216,6 @@ public class Order extends Product{         //Order extends Product makes it one
             addOrderToList(orderCustomerID, productID, productName, productPrice, productCategory, orderID, orderStatus);
         }
     }
-
-
-
-
 
     /////
     @Override

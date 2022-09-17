@@ -1,12 +1,16 @@
 package com.company;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
 
+import static com.company.Admin.admins;
 import static com.company.Customer.customers;
 
 public class ControlMain {
-    public void preProcessing() throws FileNotFoundException, InterruptedException {    ///This is for the programme to read data from the csv file and write to the ArrayList
+
+    ///This is for the programme to read data from the csv file and write to the ArrayList
+    public void preProcessing() throws FileNotFoundException, InterruptedException {
         System.out.println("Loading");  ///Cosmetic purposes
         Thread.sleep(500);
         Admin.readAdmin();
@@ -23,11 +27,13 @@ public class ControlMain {
         Thread.sleep(500);
     }
 
-    public void register() throws IOException {     //This is for Customer to register their account
+    //This is for Customer to register their account
+    public void register() throws IOException {
         Customer.createCustomer();
         Customer.writeCustomer();
     }
 
+    //Login
     public void login() throws IOException, InterruptedException {
         String userNameEntered;
         String passWordEntered;
@@ -40,18 +46,21 @@ public class ControlMain {
         userNameEntered = loginScan.nextLine();
         System.out.print("Password: ");
         passWordEntered = loginScan.nextLine();
-        for (Customer customer : customers){
-            if (customer.getUserName().equals(userNameEntered) && customer.getPassWord().equals(passWordEntered)){
-                Customer.customerInSession.add(customer);
-                verified = true;
-                Customer.customerMenu();
-                break;
-            } else if (userNameEntered.equals("admin") && passWordEntered.equals("admin")) {
-                Admin.adminMenu();
-                verified = true;
-                break;
+        for (Admin admin : admins){
+            for (Customer customer : customers){
+                if (customer.getUserName().equals(userNameEntered) && customer.getPassWord().equals(passWordEntered)){
+                    Customer.customerInSession.add(customer);
+                    verified = true;
+                    Customer.customerMenu();
+                    break;
+                } else if (admin.getUserName().equals(userNameEntered) && admin.getPassWord().equals(passWordEntered)) {
+                    Admin.adminMenu();
+                    verified = true;
+                    break;
+                }
             }
         }
+
         while(!verified == true){
             System.out.println("Your Username/Password is incorrect!");
             System.out.println("Please enter your account credentials:");
@@ -60,16 +69,18 @@ public class ControlMain {
             userNameEntered = loginScan.nextLine();
             System.out.print("Password: ");
             passWordEntered = loginScan.nextLine();
-            for (Customer customer : customers){
-                if (customer.getUserName().equals(userNameEntered) && customer.getPassWord().equals(passWordEntered)){
-                    Customer.customerInSession.add(customer);
-                    verified = true;
-                    Customer.customerMenu();
-                    break;
-                } else if (userNameEntered.equals("admin") && passWordEntered.equals("admin")) {
-                    Admin.adminMenu();
-                    verified = true;
-                    break;
+            for (Admin admin : admins){
+                for (Customer customer : customers){
+                    if (customer.getUserName().equals(userNameEntered) && customer.getPassWord().equals(passWordEntered)){
+                        Customer.customerInSession.add(customer);
+                        verified = true;
+                        Customer.customerMenu();
+                        break;
+                    } else if (admin.getUserName().equals(userNameEntered) && admin.getPassWord().equals(passWordEntered)) {
+                        Admin.adminMenu();
+                        verified = true;
+                        break;
+                    }
                 }
             }
         }

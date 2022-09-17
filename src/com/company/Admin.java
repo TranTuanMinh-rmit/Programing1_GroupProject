@@ -9,7 +9,7 @@ import java.util.Scanner;
 public class Admin extends Account {
     private Integer accountIdNumber;
 
-    static ArrayList<Account> admins = new ArrayList<>();
+    static ArrayList<Admin> admins = new ArrayList<>();
 
     public Admin(String userName, String passWord, String accountID) {
         super(userName, passWord, accountID);
